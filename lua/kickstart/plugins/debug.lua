@@ -1,10 +1,10 @@
 -- debug.lua
 --
--- Shows how to use the DAP plugin to debug your code.
+-- Muestra cómo usar el plugin DAP para depurar tu código.
 --
--- Primarily focused on configuring the debugger for Go, but can
--- be extended to other languages as well. That's why it's called
--- kickstart.nvim and not kitchen-sink.nvim ;)
+-- Principalmente enfocado en configurar el depurador para Go, pero puede
+-- extenderse a otros lenguajes también. Por eso se llama
+-- kickstart.nvim y no kitchen-sink.nvim ;)
 
 return {
   -- NOTE: Yes, you can install new plugins here!
