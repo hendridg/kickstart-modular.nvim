@@ -34,7 +34,6 @@ return {
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
-      'hrsh7th/cmp-copilot', -- Add this line to include copilot source
     },
     config = function()
       -- See `:help cmp`
@@ -109,7 +108,6 @@ return {
             group_index = 0,
           },
           { name = 'nvim_lsp' },
-          { name = 'cmp_copilot', group_index = 2 },
           { name = 'luasnip' },
           { name = 'path' },
         },

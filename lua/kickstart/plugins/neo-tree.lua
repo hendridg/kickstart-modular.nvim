@@ -52,11 +52,20 @@ return {
             end
           end)
         end,
+        relative_path = function(state)
+          local node = state.tree:get_node()
+          local modify = vim.fn.fnamemodify
+          local filepath = node:get_id()
+          local cwd = modify(filepath, ':.')
+          vim.notify(('Copied: %s'):format(cwd), vim.log.levels.INFO)
+          vim.fn.setreg('+', cwd)
+        end,
       },
       window = {
         mappings = {
           ['\\'] = 'close_window',
           ['Y'] = 'copy_path',
+          ['<c-r>'] = 'relative_path',
         },
       },
     },
