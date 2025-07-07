@@ -222,6 +222,7 @@ return {
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'tailwindcss', -- Used to format Lua code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -235,6 +236,34 @@ return {
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
+        },
+      }
+      -- Explicitly configure tailwindcss after mason-lspconfig
+      require('lspconfig').tailwindcss.setup {
+        root_dir = require('lspconfig.util').root_pattern('mix.exs', '.git'),
+        filetypes = { 'html', 'javascript', 'typescript', 'css', 'elixir', 'eex', 'heex' },
+        settings = {
+          tailwindCSS = {
+            classAttributes = { 'class', 'className', 'class:list', 'classList', 'ngClass' },
+            includeLanguages = {
+              eelixir = 'html-eex',
+              elixir = 'phoenix-heex',
+              eruby = 'erb',
+              heex = 'phoenix-heex',
+              htmlangular = 'html',
+              templ = 'html',
+            },
+            lint = {
+              cssConflict = 'warning',
+              invalidApply = 'error',
+              invalidConfigPath = 'error',
+              invalidScreen = 'error',
+              invalidTailwindDirective = 'error',
+              invalidVariant = 'error',
+              recommendedVariantOrder = 'warning',
+            },
+            validate = true,
+          },
         },
       }
     end,
