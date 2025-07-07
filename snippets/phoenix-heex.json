@@ -1,0 +1,43 @@
+{
+  "lv_render_function_component": {
+    "prefix": "fc",
+    "body": "<.${1}$0 />",
+    "description": "Render function component"
+  },
+  "lv_render_function_component_with_content": {
+    "prefix": "fcc",
+    "body": [
+      "<.${1}>",
+      "  $0",
+      "</.${1}>"
+    ],
+    "description": "Render function component with content"
+  },
+  "lv_render_function_component_with_content_and_attrs": {
+    "prefix": "fcca",
+    "body": [
+      "<.${1:name} ${2:attr}={${3:value}}>",
+      "  $0",
+      "</.${1:name}>"
+    ],
+    "description": "Render function component with attrs"
+  },
+  "lv_render_slot": {
+    "prefix": "sl",
+    "body": [
+      "<:${1}>",
+      "  $0",
+      "</:${1}>"
+    ],
+    "description": "Render function component slot"
+  },
+  "LiveView Event Handler": {
+    "prefix": "phxevent",
+    "body": [
+      "def handle_event(\"$1\", %{\"$2\" => $3}, socket) do",
+      "  {:noreply, socket}",
+      "end"
+    ],
+    "description": "Phoenix LiveView handle_event function"
+  }
+}

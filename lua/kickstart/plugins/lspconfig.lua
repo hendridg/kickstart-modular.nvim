@@ -222,7 +222,8 @@ return {
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
-        'tailwindcss', -- Used to format Lua code
+        'tailwindcss', -- Used to format Tailwind code
+        'elixirls', -- Used to format Elixir code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -263,6 +264,20 @@ return {
               recommendedVariantOrder = 'warning',
             },
             validate = true,
+          },
+        },
+      }
+
+      require('lspconfig').elixirls.setup {
+        root_dir = require('lspconfig.util').root_pattern('mix.exs', '.git'),
+        cmd = { 'elixir-ls' },
+        settings = {
+          elixirLS = {
+            dialyzerEnabled = true,
+            fetchDeps = false,
+            suggestSpecs = true,
+            enableTestLenses = true,
+            mixEnv = 'dev',
           },
         },
       }

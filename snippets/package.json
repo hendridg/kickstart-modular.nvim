@@ -1,0 +1,19 @@
+{
+  "name": "mis-snippets",
+  "contributes": {
+    "snippets": [
+      {
+        "language": [
+          "elixir"
+        ],
+        "path": "./elixir.json"
+      },
+      {
+        "language": [
+          "phoenix-heex"
+        ],
+        "path": "./phoenix-heex.json"
+      }
+    ]
+  }
+}
