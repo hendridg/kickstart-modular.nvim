@@ -158,6 +158,14 @@ Below you can find OS specific install instructions for Neovim and dependencies.
 
 After installing all the dependencies continue with the [Install Kickstart](#Install-Kickstart) step.
 
+## Requisitos
+
+- [Node.js](https://nodejs.org/) instalado en el sistema.
+- `markdownlint-cli` instalado globalmente para evitar errores con la previsualización de archivos Markdown en algunos plugins de Neovim:
+
+```sh
+npm install -g markdownlint-cli
+
 #### Windows Installation
 
 <details><summary>Windows with Microsoft C++ Build Tools and CMake</summary>
