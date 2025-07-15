@@ -45,4 +45,44 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Scratch buffer functionality
+local scratch_count = 0
+vim.keymap.set('n', '<leader>.', function()
+  scratch_count = scratch_count + 1
+  vim.cmd 'enew'
+  vim.bo.buftype = 'nofile'
+  vim.bo.bufhidden = 'hide'
+  vim.bo.swapfile = false
+  vim.bo.buflisted = true
+  vim.api.nvim_buf_set_name(0, 'Scratch' .. (scratch_count > 1 and (' ' .. scratch_count) or ''))
+end, { desc = 'Abrir buffer scratch' })
+
+-- Atajo para cerrar el buffer actual con <leader>q
+vim.keymap.set('n', '<leader>q', ':bd<CR>', { desc = 'Cerrar buffer actual' })
+
+-- Atajo para cerrar los otros buffers con <leader>Q
+vim.keymap.set('n', '<leader>Q', function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local closed_buffers = {}
+  for _, b in ipairs(vim.api.nvim_list_bufs()) do
+    if b ~= bufnr and vim.api.nvim_buf_is_loaded(b) then
+      local name = vim.api.nvim_buf_get_name(b)
+      print('Buffer name:', name)
+      if not name:match '[/\\]?Scratch[: ]?%d*$' then
+        vim.api.nvim_buf_delete(b, { force = true })
+        table.insert(closed_buffers, name)
+      end
+    end
+  end
+  if #closed_buffers > 0 then
+    local msg = 'Buffers cerrados:\n'
+    for _, name in ipairs(closed_buffers) do
+      msg = msg .. '  ' .. name .. '\n'
+    end
+    print(msg)
+  else
+    print 'No se cerraron buffers.'
+  end
+end, { desc = 'Cerrar otros buffers' })
+
 -- vim: ts=2 sts=2 sw=2 et

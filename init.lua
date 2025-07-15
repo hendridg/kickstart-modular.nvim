@@ -111,5 +111,14 @@ vim.cmd [[
   highlight SignColumn ctermbg=none guibg=none
   highlight VertSplit ctermbg=none guibg=none
 ]]
+
+-- Scratch functionality
+vim.api.nvim_create_user_command('Scratch', function()
+  vim.cmd 'enew'
+  vim.bo.buftype = 'nofile'
+  vim.bo.bufhidden = 'hide'
+  vim.bo.swapfile = false
+end, {})
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
