@@ -58,7 +58,7 @@ vim.keymap.set('n', '<leader>.', function()
 end, { desc = 'Abrir buffer scratch' })
 
 -- Atajo para cerrar el buffer actual con <leader>q
-vim.keymap.set('n', '<leader>q', ':bd<CR>', { desc = 'Cerrar buffer actual' })
+vim.keymap.set('n', '<leader>x', ':bd<CR>', { desc = 'Cerrar buffer actual' })
 
 -- Atajo para cerrar los otros buffers con <leader>Q
 vim.keymap.set('n', '<leader>Q', function()
