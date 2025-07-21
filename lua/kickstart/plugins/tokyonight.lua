@@ -11,12 +11,13 @@ return {
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       -- vim.cmd.colorscheme 'tokyonight-night'
-      vim.cmd.colorscheme 'retrobox'
+      -- vim.cmd.colorscheme 'retrobox'
+      vim.cmd.colorscheme 'default'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=italic'
       -- vim.cmd.hi 'Visual gui=none'
-      vim.cmd.hi 'Visual guibg=#F4A900'
+      -- vim.cmd.hi 'Visual guibg=#F4A900'
     end,
   },
 }
