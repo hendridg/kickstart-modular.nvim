@@ -16,7 +16,8 @@ return {
 
     -- Required dependency for nvim-dap-ui
     'nvim-neotest/nvim-nio',
-
+    -- Shows virtual text for variables in the current scope
+    'theHamsta/nvim-dap-virtual-text',
     -- Installs the debug adapters for you
     'williamboman/mason.nvim',
     'jay-babu/mason-nvim-dap.nvim',
@@ -101,11 +102,10 @@ return {
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
     dapui.setup {
-      -- Set icons to characters that are more likely to work in every terminal.
-      --    Feel free to remove or use ones that you like more! :)
-      --    Don't feel like these are good choices.
       icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
       controls = {
+        enabled = true,
+        element = 'repl',
         icons = {
           pause = '⏸',
           play = '▶',
@@ -118,19 +118,119 @@ return {
           disconnect = '⏏',
         },
       },
+      mappings = {
+        -- Use default mappings
+        expand = { '<CR>', '<2-LeftMouse>' },
+        open = 'o',
+        remove = 'd',
+        edit = 'e',
+        repl = 'r',
+        toggle = 't',
+      },
+      element_mappings = {},
+      expand_lines = true,
+      force_buffers = true,
+      layouts = {
+        {
+          elements = {
+            { id = 'scopes', size = 0.25 },
+            { id = 'breakpoints', size = 0.25 },
+            { id = 'stacks', size = 0.25 },
+            { id = 'watches', size = 0.25 },
+          },
+          size = 40,
+          position = 'left',
+        },
+        {
+          elements = {
+            { id = 'repl', size = 0.5 },
+            { id = 'console', size = 0.5 },
+          },
+          size = 10,
+          position = 'bottom',
+        },
+      },
+      floating = {
+        max_height = nil,
+        max_width = nil,
+        border = 'single',
+        mappings = {
+          close = { 'q', '<Esc>' },
+        },
+      },
+      render = {
+        indent = 1,
+        max_type_length = nil,
+        max_value_lines = 100,
+      },
     }
 
     -- Change breakpoint icons
-    -- vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
-    -- vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
-    -- local breakpoint_icons = vim.g.have_nerd_font
-    --     and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
-    --   or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
-    -- for type, icon in pairs(breakpoint_icons) do
-    --   local tp = 'Dap' .. type
-    --   local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
-    --   vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
-    -- end
+    vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
+    vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
+    local breakpoint_icons = vim.g.have_nerd_font
+        and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
+      or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
+    for type, icon in pairs(breakpoint_icons) do
+      local tp = 'Dap' .. type
+      local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
+      vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
+    end
+
+    require('nvim-dap-virtual-text').setup {
+      -- This just tries to mitigate the chance that I leak tokens here. Probably won't stop it from happening...
+      display_callback = function(variable)
+        local name = string.lower(variable.name)
+        local value = string.lower(variable.value)
+        if name:match 'secret' or name:match 'api' or value:match 'secret' or value:match 'api' then
+          return '*****'
+        end
+
+        if #variable.value > 15 then
+          return ' ' .. string.sub(variable.value, 1, 15) .. '... '
+        end
+
+        return ' ' .. variable.value
+      end,
+    }
+
+    -- Handled by nvim-dap-go
+    -- dap.adapters.go = {
+    --   type = "server",
+    --   port = "${port}",
+    --   executable = {
+    --     command = "dlv",
+    --     args = { "dap", "-l", "127.0.0.1:${port}" },
+    --   },
+    -- }
+
+    local elixir_ls_debugger = vim.fn.exepath 'elixir-ls-debugger'
+    if elixir_ls_debugger ~= '' then
+      dap.adapters.mix_task = {
+        type = 'executable',
+        command = elixir_ls_debugger,
+      }
+
+      dap.configurations.elixir = {
+        {
+          type = 'mix_task',
+          name = 'phoenix server',
+          task = 'phx.server',
+          request = 'launch',
+          projectDir = '${workspaceFolder}',
+          exitAfterTaskReturns = false,
+          debugAutoInterpretAllModules = false,
+        },
+      }
+    end
+
+    -- vim.keymap.set("n", "<space>b", dap.toggle_breakpoint)
+    -- vim.keymap.set("n", "<space>gb", dap.run_to_cursor)
+
+    -- Eval var under cursor
+    vim.keymap.set('n', '<space>?', function()
+      require('dapui').eval(nil, { enter = true, context = 'hover', width = 50, height = 1 })
+    end)
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
