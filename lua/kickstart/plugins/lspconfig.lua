@@ -238,14 +238,14 @@ return {
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+            vim.lsp.config(server_name, server)
           end,
         },
       }
       -- Explicitly configure tailwindcss after mason-lspconfig
-      require('lspconfig').tailwindcss.setup {
-        root_dir = require('lspconfig.util').root_pattern('mix.exs', '.git'),
+      vim.lsp.config.tailwindcss = {
         filetypes = { 'html', 'javascript', 'typescript', 'css', 'elixir', 'eex', 'heex' },
+        root_markers = { 'mix.exs', '.git' },
         settings = {
           tailwindCSS = {
             classAttributes = { 'class', 'className', 'class:list', 'classList', 'ngClass' },
@@ -271,9 +271,10 @@ return {
         },
       }
 
-      require('lspconfig').elixirls.setup {
-        root_dir = require('lspconfig.util').root_pattern('mix.exs', '.git'),
+      vim.lsp.config.elixirls = {
         cmd = { 'elixir-ls' },
+        root_markers = { 'mix.exs', '.git' },
+        filetypes = { 'elixir', 'eelixir', 'heex', 'surface' },
         settings = {
           elixirLS = {
             dialyzerEnabled = true,
