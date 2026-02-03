@@ -57,8 +57,8 @@ vim.keymap.set('n', '<leader>.', function()
   vim.api.nvim_buf_set_name(0, 'Scratch' .. (scratch_count > 1 and (' ' .. scratch_count) or ''))
 end, { desc = 'Abrir buffer scratch' })
 
--- Atajo para cerrar el buffer actual con <leader>q
-vim.keymap.set('n', '<leader>x', ':bd<CR>', { desc = 'Cerrar buffer actual' })
+-- Atajo para cerrar el buffer actual con Control+Q
+vim.keymap.set('n', '<C-q>', ':bd<CR>', { desc = 'Close current buffer' })
 
 -- Atajo para cerrar los otros buffers con <leader>Q
 vim.keymap.set('n', '<leader>Q', function()
@@ -67,7 +67,6 @@ vim.keymap.set('n', '<leader>Q', function()
   for _, b in ipairs(vim.api.nvim_list_bufs()) do
     if b ~= bufnr and vim.api.nvim_buf_is_loaded(b) then
       local name = vim.api.nvim_buf_get_name(b)
-      print('Buffer name:', name)
       if not name:match '[/\\]?Scratch[: ]?%d*$' then
         vim.api.nvim_buf_delete(b, { force = true })
         table.insert(closed_buffers, name)
@@ -75,14 +74,10 @@ vim.keymap.set('n', '<leader>Q', function()
     end
   end
   if #closed_buffers > 0 then
-    local msg = 'Buffers cerrados:\n'
-    for _, name in ipairs(closed_buffers) do
-      msg = msg .. '  ' .. name .. '\n'
-    end
-    print(msg)
+    vim.notify('Closed ' .. #closed_buffers .. ' buffer(s)', vim.log.levels.INFO)
   else
-    print 'No se cerraron buffers.'
+    vim.notify('No buffers to close', vim.log.levels.INFO)
   end
-end, { desc = 'Cerrar otros buffers' })
+end, { desc = 'Close other buffers' })
 
 -- vim: ts=2 sts=2 sw=2 et

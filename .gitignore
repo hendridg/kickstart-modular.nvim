@@ -5,3 +5,7 @@ nvim
 
 spell/
 lazy-lock.json
+
+# Temporary debug/utility scripts
+install-parsers.vim
+lua/treesitter-debug.lua

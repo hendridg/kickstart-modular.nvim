@@ -53,9 +53,7 @@ return {
   },
   config = function(_, opts)
     require('ufo').setup(opts)
-    -- Using ufo provider need remap `zR` and `zM`
-    vim.keymap.set('n', 'zR', require('ufo').openAllFolds, { desc = 'Open all folds' })
-    vim.keymap.set('n', 'zM', require('ufo').closeAllFolds, { desc = 'Close all folds' })
+    -- Note: zR, zM, zr, zm, and K are already defined in the keys table above
   end,
 }
 -- vim: ts=2 sts=2 sw=2 et

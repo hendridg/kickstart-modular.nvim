@@ -223,6 +223,35 @@ return {
           },
         },
 
+        ts_ls = {
+          root_markers = { 'package.json', 'tsconfig.json', 'jsconfig.json', '.git' },
+          filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
+          settings = {
+            typescript = {
+              inlayHints = {
+                includeInlayParameterNameHints = 'all',
+                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHints = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayEnumMemberValueHints = true,
+              },
+            },
+            javascript = {
+              inlayHints = {
+                includeInlayParameterNameHints = 'all',
+                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHints = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayEnumMemberValueHints = true,
+              },
+            },
+          },
+        },
+
         tailwindcss = {
           filetypes = { 'html', 'javascript', 'typescript', 'css', 'elixir', 'eex', 'heex' },
           root_markers = { 'tailwind.config.js', 'tailwind.config.ts', 'mix.exs', '.git' },
