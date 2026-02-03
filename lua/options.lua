@@ -9,9 +9,11 @@ vim.opt.number = true
 --  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
 
--- Enable collapsing of code blocks
-vim.opt.foldmethod = 'indent'
-vim.opt.foldenable = true
+-- Enable collapsing of code blocks with nvim-ufo
+vim.opt.foldcolumn = '1' -- Show fold column
+vim.opt.foldlevel = 99 -- Using ufo provider need a large value
+vim.opt.foldlevelstart = 99 -- Start with all folds open
+vim.opt.foldenable = true -- Enable folding
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -67,5 +69,18 @@ vim.opt.scrolloff = 10
 
 -- Enable termguicolors
 vim.opt.termguicolors = true
+
+-- Ghostty terminal compatibility
+if vim.env.TERM == 'xterm-ghostty' then
+  vim.g.terminal_color_0 = '#282a36'
+  vim.g.terminal_color_8 = '#4d4d4d'
+end
+
+-- Additional quality of life options
+vim.opt.pumheight = 10 -- Popup menu height
+vim.opt.conceallevel = 0 -- Show `` in markdown files
+vim.opt.cmdheight = 1 -- Command line height
+vim.opt.completeopt = { 'menu', 'menuone', 'noselect' } -- Completion options
+vim.opt.wrap = false -- Don't wrap lines
 
 -- vim: ts=2 sts=2 sw=2 et

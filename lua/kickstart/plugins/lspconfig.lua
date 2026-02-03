@@ -154,14 +154,14 @@ return {
       })
 
       -- Change diagnostic symbols in the sign column (gutter)
-      -- if vim.g.have_nerd_font then
-      --   local signs = { ERROR = '', WARN = '', INFO = '', HINT = '' }
-      --   local diagnostic_signs = {}
-      --   for type, icon in pairs(signs) do
-      --     diagnostic_signs[vim.diagnostic.severity[type]] = icon
-      --   end
-      --   vim.diagnostic.config { signs = { text = diagnostic_signs } }
-      -- end
+      if vim.g.have_nerd_font then
+        local signs = { ERROR = '', WARN = '', INFO = '', HINT = '' }
+        local diagnostic_signs = {}
+        for type, icon in pairs(signs) do
+          diagnostic_signs[vim.diagnostic.severity[type]] = icon
+        end
+        vim.diagnostic.config { signs = { text = diagnostic_signs } }
+      end
 
       -- LSP servers and clients are able to communicate to each other what features they support.
       --  By default, Neovim doesn't support everything that is in the LSP specification.
@@ -207,6 +207,49 @@ return {
             },
           },
         },
+
+        elixirls = {
+          cmd = { 'elixir-ls' },
+          root_markers = { 'mix.exs', '.git' },
+          filetypes = { 'elixir', 'eelixir', 'heex', 'surface' },
+          settings = {
+            elixirLS = {
+              dialyzerEnabled = true,
+              fetchDeps = false,
+              suggestSpecs = true,
+              enableTestLenses = true,
+              mixEnv = 'dev',
+            },
+          },
+        },
+
+        tailwindcss = {
+          filetypes = { 'html', 'javascript', 'typescript', 'css', 'elixir', 'eex', 'heex' },
+          root_markers = { 'tailwind.config.js', 'tailwind.config.ts', 'mix.exs', '.git' },
+          settings = {
+            tailwindCSS = {
+              classAttributes = { 'class', 'className', 'class:list', 'classList', 'ngClass' },
+              includeLanguages = {
+                eelixir = 'html-eex',
+                elixir = 'phoenix-heex',
+                eruby = 'erb',
+                heex = 'phoenix-heex',
+                htmlangular = 'html',
+                templ = 'html',
+              },
+              lint = {
+                cssConflict = 'warning',
+                invalidApply = 'error',
+                invalidConfigPath = 'error',
+                invalidScreen = 'error',
+                invalidTailwindDirective = 'error',
+                invalidVariant = 'error',
+                recommendedVariantOrder = 'warning',
+              },
+              validate = true,
+            },
+          },
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -225,8 +268,6 @@ return {
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
-        'tailwindcss', -- Used to format Tailwind code
-        'elixirls', -- Used to format Elixir code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -240,49 +281,6 @@ return {
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             vim.lsp.config(server_name, server)
           end,
-        },
-      }
-      -- Explicitly configure tailwindcss after mason-lspconfig
-      vim.lsp.config.tailwindcss = {
-        filetypes = { 'html', 'javascript', 'typescript', 'css', 'elixir', 'eex', 'heex' },
-        root_markers = { 'mix.exs', '.git' },
-        settings = {
-          tailwindCSS = {
-            classAttributes = { 'class', 'className', 'class:list', 'classList', 'ngClass' },
-            includeLanguages = {
-              eelixir = 'html-eex',
-              elixir = 'phoenix-heex',
-              eruby = 'erb',
-              heex = 'phoenix-heex',
-              htmlangular = 'html',
-              templ = 'html',
-            },
-            lint = {
-              cssConflict = 'warning',
-              invalidApply = 'error',
-              invalidConfigPath = 'error',
-              invalidScreen = 'error',
-              invalidTailwindDirective = 'error',
-              invalidVariant = 'error',
-              recommendedVariantOrder = 'warning',
-            },
-            validate = true,
-          },
-        },
-      }
-
-      vim.lsp.config.elixirls = {
-        cmd = { 'elixir-ls' },
-        root_markers = { 'mix.exs', '.git' },
-        filetypes = { 'elixir', 'eelixir', 'heex', 'surface' },
-        settings = {
-          elixirLS = {
-            dialyzerEnabled = true,
-            fetchDeps = false,
-            suggestSpecs = true,
-            enableTestLenses = true,
-            mixEnv = 'dev',
-          },
         },
       }
     end,

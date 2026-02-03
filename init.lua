@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 require 'options'
@@ -112,13 +112,22 @@ vim.cmd [[
   highlight VertSplit ctermbg=none guibg=none
 ]]
 
--- Scratch functionality
-vim.api.nvim_create_user_command('Scratch', function()
-  vim.cmd 'enew'
-  vim.bo.buftype = 'nofile'
-  vim.bo.bufhidden = 'hide'
-  vim.bo.swapfile = false
-end, {})
+-- Force Treesitter highlighting on Elixir files (Ghostty terminal fix)
+vim.api.nvim_create_autocmd({ 'FileType' }, {
+  pattern = { 'elixir', 'heex', 'eex' },
+  callback = function(args)
+    vim.schedule(function()
+      pcall(vim.treesitter.start, args.buf)
+    end)
+  end,
+  desc = 'Force enable Treesitter highlighting for Elixir files',
+})
+
+-- Comando personalizado para habilitar highlighting manualmente
+vim.api.nvim_create_user_command('TSHighlight', function()
+  vim.treesitter.start()
+  vim.notify('Treesitter highlighting habilitado', vim.log.levels.INFO)
+end, { desc = 'Enable Treesitter highlighting for current buffer' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

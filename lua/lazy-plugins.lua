@@ -57,13 +57,18 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
 
   -- NOTE: The following plugins are not included in the Kickstart repository, but are useful
   require 'kickstart.plugins.zen-mode',
+  require 'kickstart.plugins.treesitter-context',
+  -- treesitter-textobjects is configured in treesitter.lua
+  require 'kickstart.plugins.trouble',
+  require 'kickstart.plugins.flash',
+  require 'kickstart.plugins.ufo',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
