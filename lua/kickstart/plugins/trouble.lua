@@ -5,6 +5,9 @@ return {
   dependencies = { 'nvim-tree/nvim-web-devicons' },
   opts = {
     focus = true, -- Focus the window when opened
+    win = {
+      size = 0.4, -- Same width as Copilot Chat (40% of window width)
+    },
   },
   keys = {
     {

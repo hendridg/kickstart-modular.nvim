@@ -31,9 +31,9 @@ return {
       if require('copilot.suggestion').is_visible() then
         require('copilot.suggestion').accept()
       else
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<CR>', true, false, true), 'n', true)
+        return vim.api.nvim_replace_termcodes('<CR>', true, false, true)
       end
-    end, { silent = true, desc = 'Accept Copilot suggestion or insert newline' })
+    end, { silent = true, expr = true, desc = 'Accept Copilot suggestion or insert newline' })
 
     vim.keymap.set('i', '<M-]>', function()
       require('copilot.suggestion').next()
