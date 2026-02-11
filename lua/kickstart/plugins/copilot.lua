@@ -28,12 +28,15 @@ return {
 
     -- Manually set keymaps to avoid duplicate registration
     vim.keymap.set('i', '<CR>', function()
-      if require('copilot.suggestion').is_visible() then
-        require('copilot.suggestion').accept()
+      local copilot_suggestion = require('copilot.suggestion')
+      if copilot_suggestion.is_visible() then
+        copilot_suggestion.accept()
       else
-        return vim.api.nvim_replace_termcodes('<CR>', true, false, true)
+        -- Fallback to default Enter behavior
+        local keys = vim.api.nvim_replace_termcodes('<CR>', true, true, true)
+        vim.api.nvim_feedkeys(keys, 'n', false)
       end
-    end, { silent = true, expr = true, desc = 'Accept Copilot suggestion or insert newline' })
+    end, { noremap = true, silent = true, desc = 'Accept Copilot suggestion or insert newline' })
 
     vim.keymap.set('i', '<M-]>', function()
       require('copilot.suggestion').next()
