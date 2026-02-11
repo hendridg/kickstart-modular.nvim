@@ -208,19 +208,29 @@ return {
           },
         },
 
-        elixirls = {
-          cmd = { 'elixir-ls' },
-          root_markers = { 'mix.exs', '.git' },
+        -- Replaced elixirls with lexical for better HEEx/Phoenix component support
+        -- elixirls = {
+        --   cmd = { 'elixir-ls' },
+        --   root_markers = { 'mix.exs', '.git' },
+        --   filetypes = { 'elixir', 'eelixir', 'heex', 'surface' },
+        --   settings = {
+        --     elixirLS = {
+        --       dialyzerEnabled = true,
+        --       fetchDeps = false,
+        --       suggestSpecs = true,
+        --       enableTestLenses = true,
+        --       mixEnv = 'dev',
+        --     },
+        --   },
+        -- },
+
+        lexical = {
+          cmd = { 'lexical' },
           filetypes = { 'elixir', 'eelixir', 'heex', 'surface' },
-          settings = {
-            elixirLS = {
-              dialyzerEnabled = true,
-              fetchDeps = false,
-              suggestSpecs = true,
-              enableTestLenses = true,
-              mixEnv = 'dev',
-            },
-          },
+          root_dir = function(fname)
+            return vim.fs.dirname(vim.fs.find({ 'mix.exs', '.git' }, { path = fname, upward = true })[1])
+          end,
+          settings = {},
         },
 
         ts_ls = {
