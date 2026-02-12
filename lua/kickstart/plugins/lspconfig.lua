@@ -227,10 +227,24 @@ return {
         lexical = {
           cmd = { 'lexical' },
           filetypes = { 'elixir', 'eelixir', 'heex', 'surface' },
-          root_dir = function(fname)
-            return vim.fs.dirname(vim.fs.find({ 'mix.exs', '.git' }, { path = fname, upward = true })[1])
+          root_dir = function(bufnr)
+            local fname = vim.api.nvim_buf_get_name(bufnr)
+            local found = vim.fs.find({ 'mix.exs', '.git' }, { path = fname, upward = true })[1]
+            return found and vim.fs.dirname(found) or nil
           end,
-          settings = {},
+          settings = {
+            -- Lexical settings for better HEEx and Phoenix support
+            lexical = {
+              dialyzer = {
+                enabled = true,
+              },
+              -- Enable experimental features for better HEEx support
+              experimental = {
+                -- Enable completions for Phoenix.Component attributes
+                enableComponentCompletion = true,
+              },
+            },
+          },
         },
 
         ts_ls = {
@@ -263,18 +277,34 @@ return {
         },
 
         tailwindcss = {
-          filetypes = { 'html', 'javascript', 'typescript', 'css', 'elixir', 'eex', 'heex' },
-          root_markers = { 'tailwind.config.js', 'tailwind.config.ts', 'mix.exs', '.git' },
+          filetypes = { 'html', 'javascript', 'typescript', 'css', 'elixir', 'eelixir', 'heex', 'surface' },
+          root_dir = function(bufnr)
+            local fname = vim.api.nvim_buf_get_name(bufnr)
+            local found = vim.fs.find({ 'tailwind.config.js', 'tailwind.config.ts', 'mix.exs', '.git' }, { path = fname, upward = true })[1]
+            return found and vim.fs.dirname(found) or nil
+          end,
           settings = {
             tailwindCSS = {
               classAttributes = { 'class', 'className', 'class:list', 'classList', 'ngClass' },
               includeLanguages = {
-                eelixir = 'html-eex',
-                elixir = 'phoenix-heex',
-                eruby = 'erb',
-                heex = 'phoenix-heex',
-                htmlangular = 'html',
-                templ = 'html',
+                eelixir = 'html',
+                elixir = 'html',
+                eruby = 'html',
+                heex = 'html',
+                surface = 'html',
+              },
+              experimental = {
+                -- Enable class completions in string interpolations
+                classRegex = {
+                  -- Match class attributes in HEEx templates
+                  'class[:]\\s*"([^"]*)"',
+                  'class[:]\\s*\'([^\']*)\'',
+                  -- Match class in HTML-like tags
+                  'class="([^"]*)"',
+                  'class=\'([^\']*)\'',
+                  -- Match classes in function calls (like class={@class})
+                  'class[=:]\\s*[{]([^}]*)[}]',
+                },
               },
               lint = {
                 cssConflict = 'warning',
@@ -322,6 +352,14 @@ return {
           end,
         },
       }
+
+      -- Manual setup for Lexical (not available via Mason)
+      -- Lexical must be installed separately (e.g., via asdf or manual installation)
+      if servers.lexical then
+        local lexical_config = servers.lexical
+        lexical_config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, lexical_config.capabilities or {})
+        vim.lsp.config('lexical', lexical_config)
+      end
     end,
   },
 }
