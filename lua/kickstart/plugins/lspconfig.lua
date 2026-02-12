@@ -230,6 +230,7 @@ return {
           root_dir = function(fname)
             return vim.fs.dirname(vim.fs.find({ 'mix.exs', '.git' }, { path = fname, upward = true })[1])
           end,
+          -- Lexical does not accept LSP settings - it configures itself automatically
           settings = {},
         },
 
