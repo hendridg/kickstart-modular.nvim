@@ -30,14 +30,5 @@
       "</:${1}>"
     ],
     "description": "Render function component slot"
-  },
-  "LiveView Event Handler": {
-    "prefix": "phxevent",
-    "body": [
-      "def handle_event(\"$1\", %{\"$2\" => $3}, socket) do",
-      "  {:noreply, socket}",
-      "end"
-    ],
-    "description": "Phoenix LiveView handle_event function"
   }
 }

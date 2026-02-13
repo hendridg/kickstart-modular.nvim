@@ -10,7 +10,8 @@
       },
       {
         "language": [
-          "phoenix-heex"
+          "phoenix-heex",
+          "elixir"
         ],
         "path": "./phoenix-heex.json"
       }
