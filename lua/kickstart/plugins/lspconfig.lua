@@ -224,13 +224,14 @@ return {
         --   },
         -- },
 
-        lexical = {
-          cmd = { 'lexical' },
+        expert = {
+          cmd = { 'expert', '--stdio' },
           filetypes = { 'elixir', 'eelixir', 'heex', 'surface' },
           root_dir = function(fname)
             return vim.fs.dirname(vim.fs.find({ 'mix.exs', '.git' }, { path = fname, upward = true })[1])
           end,
-          -- Lexical does not accept LSP settings - it configures itself automatically
+          -- Expert is the official Elixir language server with better HEEx support
+          -- Supports goto definition for function components inside ~H"""
           settings = {},
         },
 
