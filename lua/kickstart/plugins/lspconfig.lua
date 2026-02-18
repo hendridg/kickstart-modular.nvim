@@ -208,22 +208,6 @@ return {
           },
         },
 
-        -- Replaced elixirls with lexical for better HEEx/Phoenix component support
-        -- elixirls = {
-        --   cmd = { 'elixir-ls' },
-        --   root_markers = { 'mix.exs', '.git' },
-        --   filetypes = { 'elixir', 'eelixir', 'heex', 'surface' },
-        --   settings = {
-        --     elixirLS = {
-        --       dialyzerEnabled = true,
-        --       fetchDeps = false,
-        --       suggestSpecs = true,
-        --       enableTestLenses = true,
-        --       mixEnv = 'dev',
-        --     },
-        --   },
-        -- },
-
         expert = {
           cmd = { 'expert', '--stdio' },
           filetypes = { 'elixir', 'eelixir', 'heex', 'surface' },
@@ -235,30 +219,31 @@ return {
           settings = {},
         },
 
-        ts_ls = {
+        vtsls = {
           root_markers = { 'package.json', 'tsconfig.json', 'jsconfig.json', '.git' },
           filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
           settings = {
+            vtsls = {
+              autoUseWorkspaceTsdk = true,
+            },
             typescript = {
               inlayHints = {
-                includeInlayParameterNameHints = 'all',
-                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayVariableTypeHints = true,
-                includeInlayPropertyDeclarationTypeHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayEnumMemberValueHints = true,
+                parameterNames = { enabled = 'all' },
+                parameterTypes = { enabled = true },
+                variableTypes = { enabled = true },
+                propertyDeclarationTypes = { enabled = true },
+                functionLikeReturnTypes = { enabled = true },
+                enumMemberValues = { enabled = true },
               },
             },
             javascript = {
               inlayHints = {
-                includeInlayParameterNameHints = 'all',
-                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayVariableTypeHints = true,
-                includeInlayPropertyDeclarationTypeHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayEnumMemberValueHints = true,
+                parameterNames = { enabled = 'all' },
+                parameterTypes = { enabled = true },
+                variableTypes = { enabled = true },
+                propertyDeclarationTypes = { enabled = true },
+                functionLikeReturnTypes = { enabled = true },
+                enumMemberValues = { enabled = true },
               },
             },
           },
