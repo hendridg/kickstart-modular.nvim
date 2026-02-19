@@ -55,7 +55,30 @@ return {
         map('n', '<leader>hu', gitsigns.undo_stage_hunk, { desc = 'git [u]ndo stage hunk' })
         map('n', '<leader>hR', gitsigns.reset_buffer, { desc = 'git [R]eset buffer' })
         map('n', '<leader>hp', gitsigns.preview_hunk, { desc = 'git [p]review hunk' })
-        map('n', '<leader>hb', gitsigns.blame_line, { desc = 'git [b]lame line' })
+        map('n', '<leader>hb', function()
+          gitsigns.blame_line { full = true }
+        end, { desc = 'git [b]lame line' })
+        map('n', '<leader>hB', function()
+          local file = vim.fn.expand '%:p'
+          local line = vim.fn.line '.'
+          local blame_cmd = string.format('git blame -L %d,%d --porcelain %s', line, line, vim.fn.shellescape(file))
+          local blame_output = vim.fn.system(blame_cmd)
+          local sha = blame_output:match '^(%x+)'
+          if sha and sha ~= string.rep('0', 40) then
+            local show_output = vim.fn.systemlist('git show ' .. sha)
+            vim.cmd 'vnew'
+            local buf = vim.api.nvim_get_current_buf()
+            vim.api.nvim_buf_set_lines(buf, 0, -1, false, show_output)
+            vim.bo[buf].buftype = 'nofile'
+            vim.bo[buf].bufhidden = 'wipe'
+            vim.bo[buf].swapfile = false
+            vim.bo[buf].filetype = 'git'
+            vim.api.nvim_buf_set_name(buf, 'git show ' .. sha:sub(1, 7))
+            vim.keymap.set('n', 'q', '<cmd>bd!<cr>', { buffer = buf, silent = true })
+          else
+            vim.notify('No commit info available (uncommitted change)', vim.log.levels.WARN)
+          end
+        end, { desc = 'git [B]lame show commit' })
         map('n', '<leader>hd', gitsigns.diffthis, { desc = 'git [d]iff against index' })
         map('n', '<leader>hD', function()
           gitsigns.diffthis '@'
