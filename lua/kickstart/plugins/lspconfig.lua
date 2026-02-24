@@ -307,6 +307,9 @@ return {
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             vim.lsp.config(server_name, server)
           end,
+          -- Disable elixirls LSP - we only use it for debugging, not for LSP
+          -- Expert handles all Elixir LSP functionality
+          ['elixirls'] = function() end,
         },
       }
     end,

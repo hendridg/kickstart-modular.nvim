@@ -30,5 +30,37 @@
       "</:${1}>"
     ],
     "description": "Render function component slot"
+  },
+  "lv_render_component_with_content": {
+    "prefix": "cc",
+    "body": [
+      "<${1}>",
+      "  $0",
+      "</${1}>"
+    ],
+    "description": "Render component with content"
+  },
+  "lv_render_component": {
+    "prefix": "c",
+    "body": "<${1}$0 />",
+    "description": "Render self-closing component"
+  },
+  "lv_render_component_with_attrs": {
+    "prefix": "cca",
+    "body": [
+      "<${1:name} ${2:attr}={${3:value}}>",
+      "  $0",
+      "</${1:name}>"
+    ],
+    "description": "Render component with attrs"
+  },
+  "lv_render_pre_inspect_componente": {
+    "prefix": "pre",
+    "body": [
+      "<pre>",
+      "  <%= inspect(@${1:value}, pretty: true) %>",
+      "</pre>"
+    ],
+    "description": "Render component with pre-inspected value"
   }
 }

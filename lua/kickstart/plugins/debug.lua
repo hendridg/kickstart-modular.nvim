@@ -96,6 +96,7 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'elixir-ls', -- Only for debugging, Expert handles LSP
       },
     }
 
@@ -151,9 +152,9 @@ return {
         },
       },
       floating = {
-        max_height = nil,
-        max_width = nil,
-        border = 'single',
+        max_height = 20, -- Maximum 20 lines
+        max_width = 80, -- Maximum 80 characters
+        border = 'rounded',
         mappings = {
           close = { 'q', '<Esc>' },
         },
@@ -204,6 +205,8 @@ return {
     --   },
     -- }
 
+    -- Elixir debugging configuration
+    -- Note: We use ElixirLS only for debugging, Expert handles LSP
     local elixir_ls_debugger = vim.fn.exepath 'elixir-ls-debugger'
     if elixir_ls_debugger ~= '' then
       dap.adapters.mix_task = {
@@ -214,6 +217,32 @@ return {
       dap.configurations.elixir = {
         {
           type = 'mix_task',
+          name = 'mix test',
+          task = 'test',
+          taskArgs = { '--trace' },
+          request = 'launch',
+          startApps = true,
+          projectDir = '${workspaceFolder}',
+          requireFiles = {
+            'test/**/test_helper.exs',
+            'test/**/*_test.exs',
+          },
+        },
+        {
+          type = 'mix_task',
+          name = 'mix test (current file)',
+          task = 'test',
+          taskArgs = { '${file}' },
+          request = 'launch',
+          startApps = true,
+          projectDir = '${workspaceFolder}',
+          requireFiles = {
+            'test/**/test_helper.exs',
+            '${file}',
+          },
+        },
+        {
+          type = 'mix_task',
           name = 'phoenix server',
           task = 'phx.server',
           request = 'launch',
@@ -221,16 +250,89 @@ return {
           exitAfterTaskReturns = false,
           debugAutoInterpretAllModules = false,
         },
+        {
+          type = 'mix_task',
+          name = 'phoenix server (with Docker DB)',
+          task = 'phx.server',
+          request = 'launch',
+          projectDir = '${workspaceFolder}',
+          exitAfterTaskReturns = false,
+          debugAutoInterpretAllModules = false,
+          env = {
+            -- Use Docker database (running on port 5433 per docker-compose.yml)
+            DATABASE_HOST = 'localhost',
+            DATABASE_PORT = '5433',
+            DATABASE_USER = 'postgres',
+            DATABASE_PASSWORD = 'postgres',
+            DATABASE_NAME = 'synapse_commerce_dev',
+            PHX_HOST = 'localhost',
+            PHX_PORT = '4000',
+            MIX_ENV = 'dev',
+          },
+        },
+        {
+          type = 'mix_task',
+          name = 'mix run (custom task)',
+          task = 'run',
+          taskArgs = function()
+            local args = vim.fn.input 'Task args: '
+            return vim.split(args, ' ')
+          end,
+          request = 'launch',
+          projectDir = '${workspaceFolder}',
+        },
       }
     end
 
     -- vim.keymap.set("n", "<space>b", dap.toggle_breakpoint)
     -- vim.keymap.set("n", "<space>gb", dap.run_to_cursor)
 
-    -- Eval var under cursor
+    -- Eval var under cursor - Auto-sizes to content (respects max 80x20 from config)
+    -- When no width/height specified, dapui automatically adjusts to content
     vim.keymap.set('n', '<space>?', function()
-      require('dapui').eval(nil, { enter = true, context = 'hover', width = 50, height = 1 })
-    end)
+      require('dapui').eval(nil, { enter = true })
+    end, { desc = 'Debug: Eval variable under cursor' })
+
+    -- Eval with visual selection
+    vim.keymap.set('v', '<space>?', function()
+      require('dapui').eval()
+    end, { desc = 'Debug: Eval selected expression' })
+
+    -- Custom command: Start Docker DB and begin debugging
+    vim.api.nvim_create_user_command('DebugWithDocker', function()
+      -- Find project root (where docker-compose.yml is)
+      local docker_compose = vim.fn.findfile('docker-compose.yml', '.;')
+      if docker_compose == '' then
+        docker_compose = vim.fn.findfile('compose.yml', '.;')
+      end
+
+      if docker_compose ~= '' then
+        local project_root = vim.fn.fnamemodify(docker_compose, ':h')
+        vim.notify('🐳 Starting Docker database...', vim.log.levels.INFO)
+
+        -- Start only the db service in background
+        vim.fn.jobstart('cd ' .. project_root .. ' && docker compose up -d db', {
+          on_exit = function(_, exit_code)
+            if exit_code == 0 then
+              vim.notify('✅ Docker DB started. Waiting 5 seconds for initialization...', vim.log.levels.INFO)
+              -- Wait for DB to be ready
+              vim.defer_fn(function()
+                vim.notify('🚀 Starting debugger...', vim.log.levels.INFO)
+                -- Start debugging with the Docker DB configuration
+                require('dap').continue()
+              end, 5000)
+            else
+              vim.notify('❌ Failed to start Docker DB', vim.log.levels.ERROR)
+            end
+          end,
+        })
+      else
+        vim.notify('⚠️  docker-compose.yml not found', vim.log.levels.WARN)
+      end
+    end, { desc = 'Start Docker DB and debug Phoenix' })
+
+    -- Optional: Add a keymap for quick access
+    vim.keymap.set('n', '<leader>dd', '<cmd>DebugWithDocker<cr>', { desc = 'Debug with Docker' })
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
