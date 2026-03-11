@@ -297,9 +297,21 @@ return {
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
+      -- Explicitly disable elixirls LSP before setting up mason-lspconfig
+      -- We only use elixir-ls for debugging (DAP), Expert handles all LSP
+      vim.lsp.config('elixirls', {
+        enabled = false,
+        autostart = false,
+      })
+
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
+            -- Skip elixirls entirely
+            if server_name == 'elixirls' then
+              return
+            end
+
             local server = servers[server_name] or {}
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
@@ -307,9 +319,6 @@ return {
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             vim.lsp.config(server_name, server)
           end,
-          -- Disable elixirls LSP - we only use it for debugging, not for LSP
-          -- Expert handles all Elixir LSP functionality
-          ['elixirls'] = function() end,
         },
       }
     end,
