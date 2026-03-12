@@ -23,6 +23,7 @@ return {
       callback = function(args)
         vim.wo.foldlevel = 99
         vim.wo.conceallevel = 2
+        vim.wo.concealcursor = 'n'
         -- Forzar treesitter highlighting en buffers norg
         pcall(vim.treesitter.start, args.buf, 'norg')
       end,
@@ -39,5 +40,6 @@ return {
         vim.cmd('edit ' .. vim.fn.expand '~/notes/' .. name .. '.norg')
       end
     end, { desc = '[N]eorg [C]reate note' })
+    vim.keymap.set('n', '<leader>nt', '<cmd>Neorg toggle-concealer<CR>', { desc = '[N]eorg [T]oggle concealer' })
   end,
 }
