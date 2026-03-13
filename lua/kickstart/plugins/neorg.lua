@@ -7,10 +7,16 @@ return {
       load = {
         ['core.defaults'] = {},
         ['core.concealer'] = {},
+        ['core.summary'] = {
+          config = {
+            strategy = 'by_path',
+          },
+        },
         ['core.dirman'] = {
           config = {
             workspaces = {
               notes = '~/notes',
+              synapseOne = '~/synapseOne',
             },
             default_workspace = 'notes',
           },
