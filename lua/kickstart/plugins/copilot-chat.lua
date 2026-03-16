@@ -9,6 +9,7 @@ return {
       auto_insert_mode = true,
       question_header = '  ' .. user .. ' ',
       answer_header = '  Copilot ',
+      tools = 'copilot',
       window = {
         width = 0.4,
       },

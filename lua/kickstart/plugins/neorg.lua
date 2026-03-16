@@ -18,6 +18,7 @@ return {
             workspaces = {
               notes = '~/notes',
               synapseOne = '~/synapseOne',
+              working = '~/working',
             },
             default_workspace = 'notes',
           },

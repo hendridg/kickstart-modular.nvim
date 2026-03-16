@@ -91,6 +91,9 @@ require('lazy').setup({
   require 'kickstart.plugins.copilot-chat',
   require 'kickstart.plugins.copilot-cmp',
 
+  -- Markdown
+  require 'kickstart.plugins.render-markdown',
+
   -- Images
   require 'custom.plugins.image',
 }, {
