@@ -1,12 +1,13 @@
 return {
   'nvim-neorg/neorg',
   lazy = false,
-  version = '*',
+  vrsion = '*',
   config = function()
     require('neorg').setup {
       load = {
         ['core.defaults'] = {},
         ['core.concealer'] = {},
+        ['core.esupports.metagen'] = {},
         ['core.summary'] = {
           config = {
             strategy = 'by_path',
