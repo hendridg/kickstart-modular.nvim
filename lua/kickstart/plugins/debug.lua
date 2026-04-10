@@ -217,6 +217,43 @@ return {
         stopOnEntry = false,
       },
     }
+    -- ESP32-C3: OpenOCD como servidor + cppdbg (GDB MI) como adaptador DAP
+    -- Requiere OpenOCD corriendo: idf.py openocd (en otra terminal)
+    local esp_gdb = '/Users/hendridgonzalez/.espressif/tools/riscv32-esp-elf-gdb/16.3_20250913/riscv32-esp-elf-gdb/bin/riscv32-esp-elf-gdb'
+
+    dap.adapters.cppdbg_esp32 = {
+      id = 'cppdbg',
+      type = 'executable',
+      command = vim.fn.stdpath 'data' .. '/mason/packages/cpptools/extension/debugAdapters/bin/OpenDebugAD7',
+    }
+
+    local function find_elf()
+      local workspace = vim.fn.getcwd()
+      local handle = io.popen('ls "' .. workspace .. '/build/"*.elf 2>/dev/null')
+      if not handle then
+        error 'No .elf file found'
+      end
+      local result = handle:read '*a'
+      handle:close()
+      result = vim.fn.trim(result)
+      if result == '' then
+        error 'No .elf file found'
+      end
+      return result
+    end
+    table.insert(dap.configurations.c, {
+      name = 'ESP32-C3 via OpenOCD',
+      type = 'cppdbg_esp32',
+      request = 'launch',
+      program = find_elf, -- Get the .elf file from build directory
+      cwd = '${workspaceFolder}',
+      MIMode = 'gdb',
+      miDebuggerPath = esp_gdb,
+      miDebuggerServerAddress = 'localhost:3333',
+      setupCommands = {
+        { text = 'set pagination off', ignoreFailures = true },
+      },
+    })
 
     -- Elixir debugging configuration
     -- Note: We use ElixirLS only for debugging, Expert handles LSP
