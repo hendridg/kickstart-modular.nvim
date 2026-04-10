@@ -302,10 +302,10 @@ return {
 
       -- Explicitly disable elixirls LSP before setting up mason-lspconfig
       -- We only use elixir-ls for debugging (DAP), Expert handles all LSP
-      vim.lsp.config('elixirls', {
-        enabled = false,
-        autostart = false,
-      })
+      -- vim.lsp.config('elixirls', {
+      --   enabled = false,
+      --   autostart = false,
+      -- })
 
       require('mason-lspconfig').setup {
         handlers = {

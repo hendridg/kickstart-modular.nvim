@@ -40,16 +40,6 @@ return {
       end,
       desc = 'Close folds with',
     },
-    {
-      'K',
-      function()
-        local winid = require('ufo').peekFoldedLinesUnderCursor()
-        if not winid then
-          vim.lsp.buf.hover()
-        end
-      end,
-      desc = 'Peek Fold or Hover',
-    },
   },
   config = function(_, opts)
     require('ufo').setup(opts)

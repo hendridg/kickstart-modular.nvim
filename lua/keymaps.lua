@@ -83,4 +83,24 @@ vim.keymap.set('n', '<leader>Q', function()
   end
 end, { desc = 'Close other buffers' })
 
+local job_id = 0
+vim.keymap.set('n', '<leader>tt', function()
+  vim.cmd.new()
+  vim.cmd.term()
+  vim.cmd.wincmd 'J'
+  vim.api.nvim_win_set_height(0, 10)
+
+  job_id = vim.bo.channel
+end)
+
+vim.keymap.set('n', '<leader>run', function()
+  print(job_id)
+  vim.fn.chansend(job_id, { 'make up-bg\r\n' })
+end)
+
+vim.keymap.set('n', '<leader>dk', function()
+  print(job_id)
+  vim.fn.chansend(job_id, { 'make down\r\n' })
+end)
+
 -- vim: ts=2 sts=2 sw=2 et

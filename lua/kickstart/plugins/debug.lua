@@ -160,7 +160,7 @@ return {
         },
       },
       render = {
-        indent = 1,
+        endent = 1,
         max_type_length = nil,
         max_value_lines = 100,
       },
@@ -204,6 +204,19 @@ return {
     --     args = { "dap", "-l", "127.0.0.1:${port}" },
     --   },
     -- }
+
+    dap.configurations.c = {
+      {
+        type = 'codelldb',
+        request = 'launch',
+        name = 'Launch file',
+        program = function()
+          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+        end,
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+      },
+    }
 
     -- Elixir debugging configuration
     -- Note: We use ElixirLS only for debugging, Expert handles LSP
