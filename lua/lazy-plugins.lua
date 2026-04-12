@@ -41,6 +41,8 @@ require('lazy').setup({
 
   require 'kickstart/plugins/pastel',
 
+  require 'kickstart/plugins/gruber-darker',
+
   require 'kickstart/plugins/todo-comments',
 
   require 'kickstart/plugins/mini',

@@ -11,12 +11,12 @@ return {
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- You can configure highlights by doing something like:
-      vim.cmd.colorscheme 'pastelrose'
+      -- vim.cmd.colorscheme 'pastelrose'
 
-      vim.cmd.hi 'Comment gui=italic'
+      -- vim.cmd.hi 'Comment gui=italic'
       -- vim.cmd.hi 'Visual gui=none'
-      vim.cmd.hi 'Visual guibg=#333a3b'
-      vim.cmd.hi 'Visual guibg=#808980'
+      -- vim.cmd.hi 'Visual guibg=#333a3b'
+      -- vim.cmd.hi 'Visual guibg=#808980'
     end,
   },
 }
