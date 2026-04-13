@@ -6,6 +6,7 @@ return {
       vim.cmd.colorscheme 'gruber-darker'
 
       vim.cmd.hi 'Comment gui=italic'
+      vim.cmd.hi 'Visual guibg=#603101'
     end,
   },
 }
