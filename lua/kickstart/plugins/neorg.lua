@@ -1,5 +1,12 @@
 return {
   'nvim-neorg/neorg',
+  dependencies = {
+    'nvim-neorg/lua-utils.nvim',
+    'nvim-lua/plenary.nvim',
+    'nvim-neotest/nvim-nio',
+    'MunifTanjim/nui.nvim',
+    'pysan3/pathlib.nvim',
+  },
   lazy = false,
   vrsion = '*',
   config = function()
