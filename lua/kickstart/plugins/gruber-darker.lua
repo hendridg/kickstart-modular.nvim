@@ -7,6 +7,10 @@ return {
 
       vim.cmd.hi 'Comment gui=italic'
       vim.cmd.hi 'Visual guibg=#603101'
+
+      -- Statusline contrast
+      vim.cmd.hi 'MiniStatuslineModeNormal guifg=#181818 guibg=#95a99f gui=bold'
+      vim.cmd.hi 'MiniStatuslineFilename guifg=#e4e4ef guibg=#3e3e3e'
     end,
   },
 }
