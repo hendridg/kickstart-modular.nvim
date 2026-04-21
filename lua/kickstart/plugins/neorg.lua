@@ -8,7 +8,7 @@ return {
     'pysan3/pathlib.nvim',
   },
   lazy = false,
-  vrsion = '*',
+  version = '*',
   config = function()
     require('neorg').setup {
       load = {

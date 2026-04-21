@@ -96,7 +96,7 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
-        'elixir-ls', -- Only for debugging, Expert handles LSP
+        'elixir-ls', -- Used for both LSP and DAP (debugging)
       },
     }
 
@@ -255,8 +255,7 @@ return {
       },
     })
 
-    -- Elixir debugging configuration
-    -- Note: We use ElixirLS only for debugging, Expert handles LSP
+    -- Elixir debugging configuration (ElixirLS handles both LSP and DAP)
     local elixir_ls_debugger = vim.fn.exepath 'elixir-ls-debugger'
     if elixir_ls_debugger ~= '' then
       dap.adapters.mix_task = {

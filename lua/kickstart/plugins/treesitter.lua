@@ -9,8 +9,8 @@ return {
     opts = {
       ensure_installed = {
         'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline',
-        'query', 'vim', 'vimdoc', 'elixir', 'heex', 'eex', 'javascript', 'typescript',
-        'tsx', 'css', 'json', 'yaml', 'toml', 'python', 'go', 'rust'
+        'norg', 'norg_meta', 'query', 'vim', 'vimdoc', 'elixir', 'heex', 'eex',
+        'javascript', 'typescript', 'tsx', 'css', 'json', 'yaml', 'toml', 'python', 'go', 'rust'
       },
       -- Autoinstall languages that are not installed
       auto_install = true,

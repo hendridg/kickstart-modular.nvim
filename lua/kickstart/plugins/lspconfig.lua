@@ -208,15 +208,33 @@ return {
           },
         },
 
-        expert = {
-          cmd = { 'expert', '--stdio' },
+        -- NOTE: Expert LSP (official Elixir LS merger of ElixirLS/Lexical/NextLS) is commented
+        -- out because it does NOT support Spark DSL autocomplete, which Ash Framework relies on.
+        -- Zach Daniel confirmed: "the spark extension we wrote for ElixirLS/elixir_sense does
+        -- not work with expert". Track progress at: https://elixirforum.com/t/expert-lsp-compatibility/74451
+        -- expert = {
+        --   cmd = { 'expert', '--stdio' },
+        --   filetypes = { 'elixir', 'eelixir', 'heex', 'surface' },
+        --   root_dir = function(fname)
+        --     return vim.fs.dirname(vim.fs.find({ 'mix.exs', '.git' }, { path = fname, upward = true })[1])
+        --   end,
+        --   settings = {},
+        -- },
+
+        elixirls = {
+          cmd = { 'elixir-ls' },
           filetypes = { 'elixir', 'eelixir', 'heex', 'surface' },
           root_dir = function(fname)
             return vim.fs.dirname(vim.fs.find({ 'mix.exs', '.git' }, { path = fname, upward = true })[1])
           end,
-          -- Expert is the official Elixir language server with better HEEx support
-          -- Supports goto definition for function components inside ~H"""
-          settings = {},
+          -- NOTE: ElixirLS is the only LSP that supports Spark DSL autocomplete (used by Ash Framework).
+          -- Spark ships an elixir_sense extension auto-detected by ElixirLS for DSL completion.
+          settings = {
+            elixirLS = {
+              dialyzerEnabled = true,
+              fetchDeps = false,
+            },
+          },
         },
 
         vtsls = {
@@ -297,26 +315,15 @@ return {
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-      -- ElixirLS is only used for debugging (DAP), Expert handles all LSP
       require('mason-lspconfig').setup {
-        automatic_enable = {
-          exclude = { 'elixirls' },
-        },
         handlers = {
           function(server_name)
-            if server_name == 'elixirls' then
-              return
-            end
-
             local server = servers[server_name] or {}
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             vim.lsp.config(server_name, server)
           end,
         },
       }
-
-      -- Belt and suspenders: disable elixirls after mason-lspconfig setup
-      vim.lsp.enable('elixirls', false)
     end,
   },
 }
